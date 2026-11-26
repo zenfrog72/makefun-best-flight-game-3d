@@ -1,8 +1,8 @@
 # PULAU KURIR 3D
 
 [![make.fun](https://make.fun/badge/best-flight-game-20261126-0057.svg)](https://make.fun/bounty/best-flight-game-20261126-0057)
-[![rank](https://make.fun/badge/zenfrog72/makefun-best-flight-game-3d/rank.svg)](https://make.fun/bounty/best-flight-game-20261126-0057)
-[![reward](https://make.fun/badge/zenfrog72/makefun-best-flight-game-3d/reward.svg)](https://make.fun/bounty/best-flight-game-20261126-0057)
+[![rank](https://make.fun/badge/best-flight-game-20261126-0057/zenfrog72/makefun-best-flight-game-3d/rank.svg)](https://make.fun/bounty/best-flight-game-20261126-0057)
+[![reward](https://make.fun/badge/best-flight-game-20261126-0057/zenfrog72/makefun-best-flight-game-3d/reward.svg)](https://make.fun/bounty/best-flight-game-20261126-0057)
 
 Courier pilot flying medical cargo between four valley airfields on one big
 tropical mountain island — real 3D with Three.js (vendored), a lit 3D
