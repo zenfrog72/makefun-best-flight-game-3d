@@ -10,7 +10,7 @@
 - Fix round (Ora 23:02 "Betulin dulu" + interior note + "Bahasa juga diganti inggris"):
   shot 1 gear up + ring count, shot 2 rebuilt as a proper in-plane interior,
   shot 4 lightning in frame, ALL in-game text switched to English.
-- Commit `TBD` (repo `~/workspace/makefun-best-flight-game-3d/`,
+- Commit `72894416d9c970298ac6fc9c0512f52dc56b8f38` (repo `~/workspace/makefun-best-flight-game-3d/`,
   fresh git repo, git identity zenfrog72).
 - Kit: fresh level-53 kit `best-flight-game-20261126-0057-kit/`; kit `init` ran before any code.
 - Quota: 1 of 3 entries used (v1 ISLAND COURIER `01a2162c`); this would be entry #2.
