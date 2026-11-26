@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PULAU KURIR 3D — Courier Pilot</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0d12;
+    font-family: 'Segoe UI', system-ui, sans-serif; color: #e8ecf2; }
+  #game-container { position: absolute; inset: 0; }
+  #game-container canvas { display: block; }
+  #hud { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+  .panel { background: rgba(8, 16, 32, 0.82); border: 1px solid rgba(255, 179, 71, 0.45);
+    border-radius: 8px; padding: 8px 12px; box-shadow: 0 2px 10px rgba(0,0,0,.45); }
+  .label { color: #ffb347; font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+  .big { font-size: 30px; font-weight: 800; line-height: 1.05; color: #fff; }
+  .sub { font-size: 13px; color: #c8d0dc; }
+  /* Mission panel, top-left */
+  #hud-mission-box { position: absolute; top: 12px; left: 12px; width: 300px; }
+  #hud-mission { color: #ffb347; font-size: 15px; font-weight: 800; }
+  #hud-objective { font-size: 14px; margin-top: 2px; }
+  #hud-meta { font-size: 12px; color: #9fb0c3; margin-top: 4px; }
+  /* Compass, top-centre */
+  #hud-compass { position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    width: 240px; text-align: center; }
+  #hud-compass-tape { position: relative; height: 26px; overflow: hidden; }
+  .tape-strip-h { position: absolute; top: 0; left: 0; height: 26px; }
+  .tape-tick-h { position: absolute; top: 0; width: 20px; margin-left: -10px; text-align: center;
+    font-size: 11px; color: #c8d0dc; border-left: 1px solid rgba(255,255,255,.4); height: 12px;
+    padding-top: 12px; line-height: 12px; }
+  .tape-tick-h.major { color: #ffb347; font-weight: 800; border-left: 2px solid #ffb347; }
+  #hud-hdg { font-size: 26px; font-weight: 800; color: #fff; }
+  /* Timer / fuel / damage, top-right */
+  #hud-status { position: absolute; top: 12px; right: 12px; width: 230px; text-align: right; }
+  #hud-timer { font-size: 30px; font-weight: 800; color: #fff; }
+  .bar { height: 10px; background: #222a36; border-radius: 5px; overflow: hidden; margin-top: 3px; }
+  .bar > div { height: 100%; border-radius: 5px; }
+  #hud-fuel { background: #37c978; width: 100%; }
+  #hud-damage { background: #ff5a3c; width: 0%; }
+  /* Speed tape, left */
+  #hud-spd-box { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 118px; }
+  #hud-spd-tape { position: relative; height: 140px; overflow: hidden; }
+  #hud-alt-box { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); width: 118px; text-align: right; }
+  #hud-alt-tape { position: relative; height: 140px; overflow: hidden; }
+  .tape-strip { position: absolute; left: 0; width: 100%; }
+  .tape-tick { position: absolute; left: 0; right: 0; height: 24px; line-height: 12px;
+    font-size: 12px; color: #c8d0dc; border-top: 1px solid rgba(255,255,255,.30); text-align: right; padding-right: 6px; }
+  .tape-tick.major { border-top: 2px solid #ffb347; color: #fff; font-weight: 700; }
+  .tape-centre { position: absolute; left: 0; right: 0; top: 68px; height: 0;
+    border-top: 2px solid #ff5a3c; z-index: 2; }
+  /* Attitude, bottom-left */
+  #hud-att-box { position: absolute; left: 12px; bottom: 12px; }
+  /* Minimap, bottom-right */
+  #hud-map-box { position: absolute; right: 12px; bottom: 12px; }
+  /* Message bar, bottom-centre */
+  #hud-message { position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    max-width: 560px; text-align: center; font-size: 15px; font-weight: 600;
+    background: rgba(8, 16, 32, 0.82); border: 1px solid rgba(255,179,71,.45);
+    border-radius: 20px; padding: 7px 18px; }
+  /* Buttons */
+  .hud-btn { pointer-events: auto; cursor: pointer; position: absolute; z-index: 6;
+    background: rgba(8,16,32,.85); color: #ffb347; border: 1px solid rgba(255,179,71,.6);
+    border-radius: 6px; font-size: 13px; font-weight: 700; padding: 6px 10px; }
+  #hud-cam { top: 148px; right: 12px; }
+  #hud-pause { top: 182px; right: 12px; }
+  /* Overlays */
+  .screen { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+    flex-direction: column; background: rgba(5, 8, 16, 0.55); z-index: 10; text-align: center; }
+  .screen h1 { font-size: 54px; font-weight: 900; color: #fff; letter-spacing: 2px;
+    text-shadow: 0 3px 18px rgba(0,0,0,.8); }
+  .screen h1 span { color: #ffb347; }
+  .screen p { font-size: 17px; color: #dfe6ee; margin-top: 8px; max-width: 640px; }
+  .mission-list { display: flex; gap: 12px; margin-top: 26px; flex-wrap: wrap; justify-content: center; }
+  .mission-btn { pointer-events: auto; cursor: pointer; width: 210px; text-align: left;
+    background: rgba(8,16,32,.88); border: 1px solid rgba(255,179,71,.6); border-radius: 10px;
+    padding: 12px 14px; color: #e8ecf2; }
+  .mission-btn:hover { border-color: #ffb347; background: rgba(20,32,56,.95); }
+  .mission-btn b { color: #ffb347; font-size: 14px; display: block; }
+  .mission-btn span { font-size: 12px; color: #c8d0dc; display: block; margin-top: 4px; line-height: 1.35; }
+  .cta { pointer-events: auto; cursor: pointer; margin-top: 24px; font-size: 19px; font-weight: 800;
+    color: #10141a; background: #ffb347; border: none; border-radius: 10px; padding: 13px 34px; }
+  .cta:hover { background: #ffc861; }
+  .ghost { pointer-events: auto; cursor: pointer; margin-top: 12px; font-size: 15px; font-weight: 700;
+    color: #ffb347; background: transparent; border: 1px solid rgba(255,179,71,.6);
+    border-radius: 10px; padding: 10px 22px; }
+  .controls { margin-top: 22px; font-size: 13px; color: #9fb0c3; line-height: 1.7; }
+  #done-grade { font-size: 44px; font-weight: 900; color: #37c978; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div id="game-container"></div>
+
+<div id="hud">
+  <div id="hud-mission-box" class="panel">
+    <div id="hud-mission">MISI 1: KARGO MEDIS</div>
+    <div id="hud-objective">Antar kargo medis ke Pulau Zamrud</div>
+    <div id="hud-meta">JARAK — m • TERBANG</div>
+  </div>
+  <div id="hud-compass" class="panel">
+    <div class="label">HEADING (HDG)</div>
+    <div id="hud-compass-tape"></div>
+    <div id="hud-hdg">080°</div>
+  </div>
+  <div id="hud-status" class="panel">
+    <div class="label">SISA WAKTU</div>
+    <div id="hud-timer">04:00</div>
+    <div class="label" id="hud-fuel-text">BAHAN BAKAR 100%</div>
+    <div class="bar"><div id="hud-fuel"></div></div>
+    <div class="label" style="margin-top:4px">KERUSAKAN</div>
+    <div class="bar"><div id="hud-damage"></div></div>
+  </div>
+  <div id="hud-spd-box" class="panel">
+    <div class="label">KECEPATAN (SPD)</div>
+    <div id="hud-spd-tape"><div class="tape-centre"></div></div>
+    <div class="big" id="hud-spd">0 KTS</div>
+    <div class="sub">THROTTLE</div>
+    <div class="bar"><div id="hud-throttle" style="background:#37c978;width:0%"></div></div>
+  </div>
+  <div id="hud-alt-box" class="panel">
+    <div class="label">KETINGGIAN (ALT)</div>
+    <div id="hud-alt-tape"><div class="tape-centre"></div></div>
+    <div class="big" id="hud-alt">0 FT</div>
+    <div class="sub" id="hud-vs">▲ +0 fpm</div>
+    <div class="sub" style="margin-top:4px"><span id="hud-gear">GEAR DOWN</span> • <span id="hud-flaps"></span></div>
+  </div>
+  <div id="hud-att-box" class="panel"><canvas id="hud-attitude" width="140" height="140"></canvas></div>
+  <div id="hud-map-box" class="panel"><canvas id="hud-map" width="180" height="180"></canvas></div>
+  <div id="hud-message">Selamat datang di Pulau Kurir 3D</div>
+  <button class="hud-btn" id="hud-cam">CHASE [C]</button>
+  <button class="hud-btn" id="hud-pause">❚❚ Jeda (P)</button>
+</div>
+
+<div class="screen" id="screen-title">
+  <h1>PULAU KURIR <span>3D</span></h1>
+  <p>Kurir udara antar lembah di pulau tropis bergunung. Empat misi, model terbang nyata, kokpit 3D menyala, dan pendaratan dinilai.</p>
+  <div class="mission-list">
+    <button class="mission-btn" data-mission="0"><b>1 — KARGO MEDIS</b><span>Antar paket medis ke Zamrud. Siang keemasan, tenang.</span></button>
+    <button class="mission-btn" data-mission="1"><b>2 — KORIDOR CINCIN</b><span>Lewati 6 cincin emas di atas lembah, mendarat di Karang.</span></button>
+    <button class="mission-btn" data-mission="2"><b>3 — PENDARATAN EKSPRES</b><span>Landasan pendek Atol. Bahan bakar ketat, senja.</span></button>
+    <button class="mission-btn" data-mission="3"><b>4 — BADAI MALAM</b><span>Hujan, petir, angin samping. Mendarat di Mercusuar.</span></button>
+  </div>
+  <div class="controls">↑ / ↓ Pitch &nbsp;•&nbsp; ← / → Belok &nbsp;•&nbsp; Shift Gas &nbsp;•&nbsp; Ctrl / Z Kurangi Gas<br>
+  G Gear &nbsp;•&nbsp; F Flaps &nbsp;•&nbsp; B Rem &nbsp;•&nbsp; C Kamera &nbsp;•&nbsp; P Jeda &nbsp;•&nbsp; Drag mouse: orbit kamera</div>
+  <button class="ghost" id="btn-sound">🔊 Suara: ON</button>
+</div>
+
+<div class="screen" id="screen-briefing">
+  <h1 id="brief-name" style="font-size:38px">MISI 1</h1>
+  <p id="brief-detail"></p>
+  <p id="brief-meta" style="color:#ffb347;font-weight:700"></p>
+  <button class="cta" id="btn-fly">✈ TERBANG</button>
+</div>
+
+<div class="screen" id="screen-done">
+  <h1 id="done-title" style="font-size:38px">MISI SELESAI</h1>
+  <div id="done-grade"></div>
+  <p id="done-body"></p>
+  <button class="cta" id="btn-next">MISI BERIKUTNYA →</button><br>
+  <button class="ghost" id="btn-retry">↻ Ulangi misi ini</button>
+</div>
+
+<div class="screen" id="screen-pause">
+  <h1 style="font-size:38px">JEDA</h1>
+  <p>Tekan P atau tombol di bawah untuk lanjut terbang.</p>
+  <button class="cta" id="btn-resume">▶ LANJUT</button>
+</div>
+
+<script src="vendor/three.min.js"></script>
+<script src="src/config.js"></script>
+<script src="src/terrain.js"></script>
+<script src="src/aircraft.js"></script>
+<script src="src/cameras.js"></script>
+<script src="src/hud.js"></script>
+<script src="src/missions.js"></script>
+<script src="src/audio.js"></script>
+<script src="src/input.js"></script>
+<script src="src/shots.js"></script>
+<script src="src/main.js"></script>
+</body>
+</html>
