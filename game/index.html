@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -93,9 +93,9 @@
 
 <div id="hud">
   <div id="hud-mission-box" class="panel">
-    <div id="hud-mission">MISI 1: KARGO MEDIS</div>
-    <div id="hud-objective">Antar kargo medis ke Pulau Zamrud</div>
-    <div id="hud-meta">JARAK — m • TERBANG</div>
+    <div id="hud-mission">MISSION 1: MEDICAL CARGO</div>
+    <div id="hud-objective">Deliver medical cargo to Zamrud Island</div>
+    <div id="hud-meta">DIST — m • AIRBORNE</div>
   </div>
   <div id="hud-compass" class="panel">
     <div class="label">HEADING (HDG)</div>
@@ -103,22 +103,22 @@
     <div id="hud-hdg">080°</div>
   </div>
   <div id="hud-status" class="panel">
-    <div class="label">SISA WAKTU</div>
+    <div class="label">TIME LEFT</div>
     <div id="hud-timer">04:00</div>
-    <div class="label" id="hud-fuel-text">BAHAN BAKAR 100%</div>
+    <div class="label" id="hud-fuel-text">FUEL 100%</div>
     <div class="bar"><div id="hud-fuel"></div></div>
-    <div class="label" style="margin-top:4px">KERUSAKAN</div>
+    <div class="label" style="margin-top:4px">DAMAGE</div>
     <div class="bar"><div id="hud-damage"></div></div>
   </div>
   <div id="hud-spd-box" class="panel">
-    <div class="label">KECEPATAN (SPD)</div>
+    <div class="label">SPEED (SPD)</div>
     <div id="hud-spd-tape"><div class="tape-centre"></div></div>
     <div class="big" id="hud-spd">0 KTS</div>
     <div class="sub">THROTTLE</div>
     <div class="bar"><div id="hud-throttle" style="background:#37c978;width:0%"></div></div>
   </div>
   <div id="hud-alt-box" class="panel">
-    <div class="label">KETINGGIAN (ALT)</div>
+    <div class="label">ALTITUDE (ALT)</div>
     <div id="hud-alt-tape"><div class="tape-centre"></div></div>
     <div class="big" id="hud-alt">0 FT</div>
     <div class="sub" id="hud-vs">▲ +0 fpm</div>
@@ -126,44 +126,44 @@
   </div>
   <div id="hud-att-box" class="panel"><canvas id="hud-attitude" width="140" height="140"></canvas></div>
   <div id="hud-map-box" class="panel"><canvas id="hud-map" width="180" height="180"></canvas></div>
-  <div id="hud-message">Selamat datang di Pulau Kurir 3D</div>
+  <div id="hud-message">Welcome to PULAU KURIR 3D</div>
   <button class="hud-btn" id="hud-cam">CHASE [C]</button>
-  <button class="hud-btn" id="hud-pause">❚❚ Jeda (P)</button>
+  <button class="hud-btn" id="hud-pause">❚❚ Pause (P)</button>
 </div>
 
 <div class="screen" id="screen-title">
   <h1>PULAU KURIR <span>3D</span></h1>
-  <p>Kurir udara antar lembah di pulau tropis bergunung. Empat misi, model terbang nyata, kokpit 3D menyala, dan pendaratan dinilai.</p>
+  <p>Island courier pilot over a tropical mountain island. Four missions, a real flight model, a lit 3D cockpit, and graded landings.</p>
   <div class="mission-list">
-    <button class="mission-btn" data-mission="0"><b>1 — KARGO MEDIS</b><span>Antar paket medis ke Zamrud. Siang keemasan, tenang.</span></button>
-    <button class="mission-btn" data-mission="1"><b>2 — KORIDOR CINCIN</b><span>Lewati 6 cincin emas di atas lembah, mendarat di Karang.</span></button>
-    <button class="mission-btn" data-mission="2"><b>3 — PENDARATAN EKSPRES</b><span>Landasan pendek Atol. Bahan bakar ketat, senja.</span></button>
-    <button class="mission-btn" data-mission="3"><b>4 — BADAI MALAM</b><span>Hujan, petir, angin samping. Mendarat di Mercusuar.</span></button>
+    <button class="mission-btn" data-mission="0"><b>1 — MEDICAL CARGO</b><span>Deliver a medical package to Zamrud. Golden hour, calm.</span></button>
+    <button class="mission-btn" data-mission="1"><b>2 — RING CORRIDOR</b><span>Fly 6 golden rings over the valley, then land at Karang.</span></button>
+    <button class="mission-btn" data-mission="2"><b>3 — EXPRESS LANDING</b><span>Short Atol runway. Tight fuel, dusk.</span></button>
+    <button class="mission-btn" data-mission="3"><b>4 — NIGHT STORM</b><span>Rain, lightning, crosswind. Land at Mercusuar.</span></button>
   </div>
-  <div class="controls">↑ / ↓ Pitch &nbsp;•&nbsp; ← / → Belok &nbsp;•&nbsp; Shift Gas &nbsp;•&nbsp; Ctrl / Z Kurangi Gas<br>
-  G Gear &nbsp;•&nbsp; F Flaps &nbsp;•&nbsp; B Rem &nbsp;•&nbsp; C Kamera &nbsp;•&nbsp; P Jeda &nbsp;•&nbsp; Drag mouse: orbit kamera</div>
-  <button class="ghost" id="btn-sound">🔊 Suara: ON</button>
+  <div class="controls">↑ / ↓ Pitch &nbsp;•&nbsp; ← / → Turn &nbsp;•&nbsp; Shift Throttle up &nbsp;•&nbsp; Ctrl / Z Throttle down<br>
+  G Gear &nbsp;•&nbsp; F Flaps &nbsp;•&nbsp; B Brake &nbsp;•&nbsp; C Camera &nbsp;•&nbsp; P Pause &nbsp;•&nbsp; Drag mouse: orbit camera</div>
+  <button class="ghost" id="btn-sound">🔊 Sound: ON</button>
 </div>
 
 <div class="screen" id="screen-briefing">
-  <h1 id="brief-name" style="font-size:38px">MISI 1</h1>
+  <h1 id="brief-name" style="font-size:38px">MISSION 1</h1>
   <p id="brief-detail"></p>
   <p id="brief-meta" style="color:#ffb347;font-weight:700"></p>
-  <button class="cta" id="btn-fly">✈ TERBANG</button>
+  <button class="cta" id="btn-fly">✈ FLY</button>
 </div>
 
 <div class="screen" id="screen-done">
-  <h1 id="done-title" style="font-size:38px">MISI SELESAI</h1>
+  <h1 id="done-title" style="font-size:38px">MISSION COMPLETE</h1>
   <div id="done-grade"></div>
   <p id="done-body"></p>
-  <button class="cta" id="btn-next">MISI BERIKUTNYA →</button><br>
-  <button class="ghost" id="btn-retry">↻ Ulangi misi ini</button>
+  <button class="cta" id="btn-next">NEXT MISSION →</button><br>
+  <button class="ghost" id="btn-retry">↻ Retry this mission</button>
 </div>
 
 <div class="screen" id="screen-pause">
-  <h1 style="font-size:38px">JEDA</h1>
-  <p>Tekan P atau tombol di bawah untuk lanjut terbang.</p>
-  <button class="cta" id="btn-resume">▶ LANJUT</button>
+  <h1 style="font-size:38px">PAUSED</h1>
+  <p>Press P or the button below to keep flying.</p>
+  <button class="cta" id="btn-resume">▶ RESUME</button>
 </div>
 
 <script src="vendor/three.min.js"></script>

@@ -15,6 +15,7 @@ PK3D.Cameras = (function () {
     var grp = new THREE.Group();
     var dark = new THREE.MeshPhongMaterial({ color: 0x1c2026, flatShading: true, shininess: 10 });
     var trim = new THREE.MeshPhongMaterial({ color: 0x3a3f46, flatShading: true });
+    var grey = new THREE.MeshPhongMaterial({ color: 0x8a8f96, flatShading: true });
 
     // Dashboard panel (the dial texture goes on its front face).
     var cnv = document.createElement('canvas');
@@ -27,21 +28,75 @@ PK3D.Cameras = (function () {
     panel.position.set(0, 0.45, -2.35);
     panel.rotation.x = -0.12;
     grp.add(panel);
-    // Glareshield above the panel.
-    var shield = new THREE.Mesh(new THREE.BoxGeometry(4.7, 0.22, 0.9), trim);
-    shield.position.set(0, 1.2, -2.3);
+    // Panel bezel: four trim bars framing the dials, corner screws, and a
+    // switch strip with toggles + indicator lights below the panel.
+    var bezH = new THREE.BoxGeometry(4.9, 0.12, 0.06);
+    var bezV = new THREE.BoxGeometry(0.12, 1.5, 0.06);
+    [[0, 1.18, bezH], [0, -0.28, bezH], [-2.42, 0.45, bezV], [2.42, 0.45, bezV]].forEach(function (b) {
+      var bar = new THREE.Mesh(b[2], trim);
+      bar.position.set(b[0], b[1], -2.15);
+      grp.add(bar);
+    });
+    [[-2.2, 1.05], [2.2, 1.05], [-2.2, -0.15], [2.2, -0.15]].forEach(function (p) {
+      var screw = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.05, 8), grey);
+      screw.rotation.x = Math.PI / 2;
+      screw.position.set(p[0], p[1], -2.16);
+      grp.add(screw);
+    });
+    var strip = new THREE.Mesh(new THREE.BoxGeometry(4.6, 0.22, 0.1), dark);
+    strip.position.set(0, -0.42, -2.2);
+    grp.add(strip);
+    var lampColors = [0x37c978, 0xffb347, 0xff5a3c, 0x37c978, 0xffb347, 0x37c978];
+    for (var si = 0; si < 6; si++) {
+      var lever = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.2, 0.07), trim);
+      lever.position.set(-1.9 + si * 0.76, -0.36, -2.16);
+      lever.rotation.x = -0.3;
+      grp.add(lever);
+      var lampDot = new THREE.Mesh(new THREE.SphereGeometry(0.05, 6, 5), new THREE.MeshBasicMaterial({ color: lampColors[si] }));
+      lampDot.position.set(-1.9 + si * 0.76, -0.5, -2.16);
+      grp.add(lampDot);
+    }
+    // Glareshield above the panel — kept low and thin so the nose cone
+    // and the spinning prop stay visible over the dashboard.
+    var shield = new THREE.Mesh(new THREE.BoxGeometry(4.7, 0.12, 0.5), trim);
+    shield.position.set(0, 1.12, -2.2);
     shield.rotation.x = 0.15;
     grp.add(shield);
-    // Windscreen posts + centre post.
+    // Canopy frame: slim side posts + centre post, a top bar across the
+    // windscreen, a cabin roof overhead and side walls, so the camera
+    // reads as sitting INSIDE the cockpit, not floating behind a slab.
     for (var s = -1; s <= 1; s += 2) {
-      var post = new THREE.Mesh(new THREE.BoxGeometry(0.16, 2.2, 0.16), trim);
+      var post = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.2, 0.12), trim);
       post.position.set(s * 2.1, 1.6, -2.9);
       post.rotation.z = -s * 0.18;
       grp.add(post);
     }
-    var centre = new THREE.Mesh(new THREE.BoxGeometry(0.14, 2.0, 0.14), trim);
+    var centre = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.0, 0.1), trim);
     centre.position.set(0, 1.6, -3.0);
     grp.add(centre);
+    var topBar = new THREE.Mesh(new THREE.BoxGeometry(4.5, 0.16, 0.16), trim);
+    topBar.position.set(0, 2.62, -2.9);
+    grp.add(topBar);
+    var roof = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.1, 1.4), dark);
+    roof.position.set(0, 2.74, -2.2);
+    roof.rotation.x = 0.08;
+    grp.add(roof);
+    for (var w = -1; w <= 1; w += 2) {
+      var wall = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.2, 3.2), dark);
+      wall.position.set(w * 2.5, 1.5, -1.2);
+      grp.add(wall);
+      // Wingtip stubs at the lower windscreen corners, just above the
+      // dashboard and beside the side posts, so the wings read at the
+      // frame edges.
+      var stub = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.14, 0.7), new THREE.MeshPhongMaterial({ color: 0xf2f2ee, flatShading: true }));
+      stub.position.set(w * 1.95, 1.35, -3.0);
+      stub.rotation.z = -w * 0.1;
+      grp.add(stub);
+      var stubTip = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.16, 0.7), new THREE.MeshPhongMaterial({ color: 0xd43a2a, flatShading: true }));
+      stubTip.position.set(w * 2.45, 1.35, -3.0);
+      stubTip.rotation.z = -w * 0.1;
+      grp.add(stubTip);
+    }
     // Yoke — low and small so it never covers the dials.
     var yoke = new THREE.Mesh(new THREE.TorusGeometry(0.36, 0.08, 6, 14), trim);
     yoke.position.set(0, -0.08, -1.7);
@@ -137,8 +192,14 @@ PK3D.Cameras = (function () {
   function setCockpitMode(parts, on) {
     if (!parts.cockpit) return;
     parts.cockpit.visible = on;
+    // In cockpit mode keep the nose cone and prop visible so the pilot
+    // sees the aircraft ahead; hide the rest of the exterior — the
+    // fuselage top and the wing sit right under the camera and would
+    // cover the panel, and the dark windscreen / side windows would
+    // block the view.
+    var keep = [parts.nose, parts.prop];
     parts.group.children.forEach(function (child) {
-      if (child !== parts.cockpit && child !== parts.blob) child.visible = !on;
+      if (child !== parts.cockpit && child !== parts.blob && keep.indexOf(child) === -1) child.visible = !on;
     });
     parts.blob.visible = true;
   }

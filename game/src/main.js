@@ -39,7 +39,7 @@
     cameraMode = mode;
     PK3D.Cameras.setCockpitMode(parts, mode === 'cockpit');
     var btn = $('hud-cam');
-    if (btn) btn.textContent = mode === 'cockpit' ? 'KOKPIT [C]' : 'CHASE [C]';
+    if (btn) btn.textContent = mode === 'cockpit' ? 'COCKPIT [C]' : 'CHASE [C]';
   }
 
   function show(id) {
@@ -52,10 +52,10 @@
   function openBriefing(i) {
     setMission(i);
     var def = C.MISSIONS[i];
-    $('brief-name').textContent = 'MISI ' + def.id + ': ' + def.name;
+    $('brief-name').textContent = 'MISSION ' + def.id + ': ' + def.name;
     $('brief-detail').textContent = def.detail;
     $('brief-meta').textContent = 'Target: ' + C.AIRFIELDS[def.target].name +
-      '  •  Bahan bakar ' + def.fuelStart + '%  •  Batas waktu ' +
+      '  •  Fuel ' + def.fuelStart + '%  •  Time limit ' +
       Math.floor(def.timeLimitS / 60) + ':' + String(def.timeLimitS % 60).padStart(2, '0');
     state = 'briefing';
     show('screen-briefing');
@@ -118,7 +118,7 @@
     $('btn-sound').addEventListener('click', function () {
       PK3D.Audio.ensure();
       PK3D.Audio.setMuted(!PK3D.Audio.isMuted());
-      $('btn-sound').textContent = PK3D.Audio.isMuted() ? '🔇 Suara: OFF' : '🔊 Suara: ON';
+      $('btn-sound').textContent = PK3D.Audio.isMuted() ? '🔇 Sound: OFF' : '🔊 Sound: ON';
     });
     $('hud-cam').addEventListener('click', function () { setCamera(cameraMode === 'chase' ? 'cockpit' : 'chase'); });
     $('hud-pause').addEventListener('click', function () {
@@ -196,11 +196,11 @@
       // Mission end states.
       if (mission.status === 'done') {
         var g = mission.grade;
-        openDone('MISI SELESAI — ' + (g ? g.label : ''),
-          mission.message + '  Skor pendaratan: ' + (g ? g.score : 0) + '/100.',
+        openDone('MISSION COMPLETE — ' + (g ? g.label : ''),
+          mission.message + '  Landing score: ' + (g ? g.score : 0) + '/100.',
           g ? g.label : '');
       } else if (mission.status === 'failed') {
-        openDone('MISI GAGAL', mission.message, '—');
+        openDone('MISSION FAILED', mission.message, '—');
       }
     } else if (state === 'paused') {
       PK3D.Input.consumeEdges().forEach(function (e) {
@@ -216,9 +216,18 @@
     if (shotNum >= 1 && shotNum <= 4 && !frozen && frames >= 30) {
       frozen = true;
       // Storm shot: freeze a lightning bolt in the sky (no light spike,
-      // so the night stays dark). High over the valley centreline so the
-      // whole zigzag reads against the sky, not inside a ridge.
-      if (shotNum === 4) terrain.showBolt(flight.x + 30, flight.y + 180, flight.z - 350);
+      // so the night stays dark). Placed heading-relative — ahead of the
+      // plane over the valley centreline — so the whole zigzag reads in
+      // frame against the sky, not off to one side inside a ridge.
+      if (shotNum === 4) {
+        var br = flight.hdg * Math.PI / 180;
+        var bfx = Math.sin(br), bfz = -Math.cos(br);
+        terrain.showBolt(
+          flight.x + bfx * 480 - bfz * 40,
+          flight.y + 220,
+          flight.z + bfz * 480 + bfx * 40
+        );
+      }
       window.__shotReady = true;
     }
     renderer.render(scene, camera);

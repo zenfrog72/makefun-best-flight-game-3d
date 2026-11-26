@@ -4,10 +4,13 @@
 2026-11-26 22:03 WIB); the bar is @satesapi "Solstice Wings" / @reactrailgun "Solstice Wing v2"
 (low-poly 3D, dense HUD, lit cockpit, graded landings).
 
-## Current state (2026-11-27 ~00:30 WIB)
-- **BUILD COMPLETE, NOT SUBMITTED.** Awaiting Ora's review of the 4 screenshots below.
+## Current state (fix round, late 2026-11-26 WIB)
+- **BUILD COMPLETE, NOT SUBMITTED.** Awaiting Ora's review of the 4 re-shot screenshots below.
   Review gate: submit ONLY after Ora approves the EXACT FINAL screenshots.
-- Commit `11c6a0c4a8939c19b16892ce407ab036a22700cf` (repo `~/workspace/makefun-best-flight-game-3d/`,
+- Fix round (Ora 23:02 "Betulin dulu" + interior note + "Bahasa juga diganti inggris"):
+  shot 1 gear up + ring count, shot 2 rebuilt as a proper in-plane interior,
+  shot 4 lightning in frame, ALL in-game text switched to English.
+- Commit `TBD` (repo `~/workspace/makefun-best-flight-game-3d/`,
   fresh git repo, git identity zenfrog72).
 - Kit: fresh level-53 kit `best-flight-game-20261126-0057-kit/`; kit `init` ran before any code.
 - Quota: 1 of 3 entries used (v1 ISLAND COURIER `01a2162c`); this would be entry #2.
@@ -31,19 +34,30 @@
   message bar — all big, high-contrast, legible at ~300px.
 
 ## Final screenshots (in `screenshots/`, all 1280x720, each <=256 KiB)
-1. `shot-1-ring-corridor.png` — 205,189 B — sha256 `f095eb6f…` — chase, banked 3/4 through
+1. `shot-1-ring-corridor.png` — 198,254 B — sha256 `925c98a1…` — chase, banked through
    ring 3 over the green valley, sea + sunset at left, snow peak behind. COVER.
-2. `shot-2-cockpit.png` — 184,379 B — sha256 `251c5cc0…` — lit cockpit, all 4 dials readable
-   (SPD 90 / ALT 233 / HDG 080), runway ahead on final to Zamrud 08.
-3. `shot-3-short-field.png` — 137,389 B — sha256 `5d12fc57…` — chase on final to Atol runway
+   HUD: RING 2/6, GEAR UP. All text English.
+2. `shot-2-cockpit.png` — 208,268 B — sha256 `d9a9b9da…` — PROPER in-plane cockpit:
+   canopy frame (posts + top bar + roof + side walls), detailed panel (bezel,
+   screws, switch strip + indicator lights), yoke, wingtip stubs with red tips
+   at the lower windscreen corners, nose cone + spinning prop ahead, runway +
+   valley through the windscreen. All 4 dials readable (SPD 87 / ALT 183 /
+   HDG 080 + attitude). Target pillar thinned + faded. All text English.
+3. `shot-3-short-field.png` — 134,493 B — sha256 `2815b646…` — chase on final to Atol runway
    "04" (threshold bars, dashes, edge lights, golden pillar), gear down + FLAPS.
-4. `shot-4-night-storm.png` — 140,760 B — sha256 `b3d024a3…` — night storm approach to
-   Mercusuar, rain, lightning bolt in the sky, lit runway, sea at the valley end.
+   All text English.
+4. `shot-4-night-storm.png` — 137,457 B — sha256 `a6941c78…` — night storm approach to
+   Mercusuar, rain, THICK lightning bolt visible in the sky over the valley
+   centreline, lit runway, sea at the valley end. All text English.
 
 ## Verification done
-- Headless playtest (puppeteer): title -> all 4 briefings -> fly -> banked turn ->
-  pause/resume, 0 JS errors (only favicon 404s). Flight-model unit test: takeoff, 58 deg
-  turn in 10 s, hard landing graded (damage 25), dive crash (damage 100).
+- Headless playtest (puppeteer-core, cached Chrome 157, 1280x720): title -> briefing 1 ->
+  fly -> banked turn -> pause/resume (key + button), 0 JS errors, 0 console errors.
+  (One probe run showed pause/resume inverted on a 600 ms wait — re-checked with
+  2 s waits: flying -> P -> paused -> P -> flying -> button -> paused. Correct;
+  the first reading was a slow-SwiftShader timing artefact.)
+- main.ts determinism: run twice from a FOREIGN cwd (/tmp, fresh MAKEFUN_OUTPUT_DIR
+  each time): exit 0 both, dossier.json byte-identical (sha256 `508e691372feeb55…`).
 - Kit check (trial, no bundle): 5 passed (competition_open, snapshot, license_osi,
   entrypoint, repo_created_after_open), 1 failed = transcripts_present (expected: no bundle
   yet), 16 skipped. Snapshot 47 files / 49,603,437 B (47 MB is the kit dir itself; within caps).
@@ -51,7 +65,7 @@
   dossier.json 983,486 B (text 90,227 B <= 163,840 cap; DOSSIER_MAX_BYTES is 4 MiB),
   12 game files / 692,839 B, 4 screenshots / 667,717 B — all within gate caps.
 - Flight-model note: shot staging freezes the sim after 30 frames; crosswind can drift the
-  plane a few degrees off the runway heading between runs (shot 4 final: hdg 296 vs rwy 300)
+  plane a few degrees off the runway heading between runs (shot 4 final: hdg 300 vs rwy 300)
   — cosmetic only, composition still reads.
 
 ## To submit (PARENT — do NOT submit from this session)
@@ -78,7 +92,26 @@
   view pitched down 2.7 deg, panel lowered to 0.45, yoke shrunk/lowered so it never covers
   the ALT dial.
 - Lightning bolt: only reads if thick (r=4), jagged (accumulating offsets), and placed high
-  over the valley centreline (not inside a ridge).
+  over the valley centreline (not inside a ridge). FIX ROUND: the freeze-time showBolt
+  offset (flight.x+30, +180, -350) put the bolt ~69 deg off-axis (out of frame) — the
+  old staging flashLightning call also expired in 0.12 s before capture. Fix: heading-
+  relative placement (480 m ahead, 40 m right, 220 m up) in main.js freeze block +
+  remove the staging flash; showBolt persists (boltTimer 0).
+- Shot 1 staging: gear must be UP in cruise (was down at 1923 ft) and the HUD ring
+  count must match the visual — stage ringsDone = 2 with rings 1-2 green so the HUD
+  reads RING 2/6 with gold ring 3 ahead.
+- Cockpit interior (fix round): the first cockpit shot read as a floating slab. Fixes:
+  canopy frame (slim posts + centre post + top bar + roof + side walls), panel bezel
+  + screws + switch strip with indicator lights, wingtip stubs at the lower windscreen
+  corners, and the real nose cone + spinning prop kept visible via setCockpitMode.
+  TRAPS: keeping the wing visible covers the panel (the wing sits right under the
+  camera); keeping the fuselage visible puts a white pyramid over the dials; a tall
+  glareshield hides the nose cone. Keep list is now [nose, prop] only, glareshield
+  low + thin, prop disc opacity 0.18 -> 0.3.
+- ALL in-game text is English now (HUD, missions, briefings, buttons, message bar,
+  done/pause screens); island names Zamrud / Karang / Atol / Mercusuar kept as proper
+  names. Verified by grep: zero Indonesian strings left in game/ (only code comments
+  were touched up too).
 - All code was written FRESH in this session from DESIGN-SPEC.md (transcript gate); no code
   lines were read from the Gemini .html, v1, or v2 sources. `game/vendor/three.min.js` and
   `vendor/makefun-game.ts` are kit/vendor files, excluded from the gate.

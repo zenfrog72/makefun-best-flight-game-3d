@@ -99,19 +99,19 @@ PK3D.Missions = (function () {
         m.ringsDone++;
         if (audio) audio.chime();
         m.message = m.ringsDone >= m.rings.length
-          ? 'Semua cincin dilewati — mendarat di Karang!'
-          : 'Cincin ' + m.ringsDone + '/' + m.rings.length + ' dilewati!';
+          ? 'All rings cleared — land at Karang!'
+          : 'Ring ' + m.ringsDone + '/' + m.rings.length + ' cleared!';
       }
     }
     // Timeout.
     if (m.elapsed > m.def.timeLimitS) {
       m.status = 'failed';
-      m.message = 'Waktu habis — misi gagal.';
+      m.message = 'Time up — mission failed.';
     }
     // Crash.
     if (state.crashed) {
       m.status = 'failed';
-      m.message = state.damage >= 100 ? 'Pesawat hancur — misi gagal.' : 'Misi gagal.';
+      m.message = state.damage >= 100 ? 'Aircraft destroyed — mission failed.' : 'Mission failed.';
     }
   }
 
@@ -122,16 +122,16 @@ PK3D.Missions = (function () {
     var fr = runwayFrame(f, state.x, state.z);
     var onStrip = Math.abs(fr.along) <= f.len / 2 + 60 && Math.abs(fr.across) <= 60;
     if (m.def.kind === 'rings' && m.ringsDone < m.rings.length) {
-      m.message = 'Cincin belum lengkap — lepas landas lagi!';
+      m.message = 'Rings incomplete — take off again!';
       return;
     }
     if (onStrip) {
       m.grade = gradeLanding(vsFpm, Math.abs(fr.across));
       m.status = 'done';
-      m.message = 'Mendarat di ' + f.name + ' — ' + m.grade.label + ' (' + Math.round(-vsFpm) + ' fpm, ' + Math.round(Math.abs(fr.across)) + ' m dari garis tengah)';
+      m.message = 'Landed at ' + f.name + ' — ' + m.grade.label + ' (' + Math.round(-vsFpm) + ' fpm, ' + Math.round(Math.abs(fr.across)) + ' m from centreline)';
       if (audio) audio.fanfare(m.grade.score >= 80);
     } else {
-      m.message = 'Bukan landasan target — lepas landas lagi!';
+      m.message = 'Not the target runway — take off again!';
     }
   }
 

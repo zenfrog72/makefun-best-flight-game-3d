@@ -49,16 +49,16 @@ PK3D.CONFIG = {
   // Missions in order. weather: 'gold' | 'dusk' | 'night'.
   MISSIONS: [
     {
-      id: 1, key: 'medis', name: 'KARGO MEDIS',
-      objective: 'Antar kargo medis ke Pulau Zamrud',
-      detail: 'Terbangkan paket medis dari Karang menuju landasan Zamrud dan mendarat mulus.',
+      id: 1, key: 'medis', name: 'MEDICAL CARGO',
+      objective: 'Deliver medical cargo to Zamrud Island',
+      detail: 'Fly the medical package from Karang to the Zamrud runway and land smoothly.',
       start: 'karang', target: 'zamrud', weather: 'gold',
       fuelStart: 100, timeLimitS: 240, kind: 'land',
     },
     {
-      id: 2, key: 'cincin', name: 'KORIDOR CINCIN',
-      objective: 'Lewati 6 cincin, lalu mendarat di Karang',
-      detail: 'Navigasikan pesawat melewati 6 cincin emas di atas lembah, lalu mendarat di Karang.',
+      id: 2, key: 'cincin', name: 'RING CORRIDOR',
+      objective: 'Fly 6 rings, then land at Karang',
+      detail: 'Navigate the plane through 6 golden rings over the valley, then land at Karang.',
       start: 'zamrud', target: 'karang', weather: 'gold',
       fuelStart: 100, timeLimitS: 270, kind: 'rings', rings: 6,
       // Valley route for the rings (waypoints stay in the green valleys
@@ -66,16 +66,16 @@ PK3D.CONFIG = {
       ringPath: [[700, 1050], [100, 1250], [-500, 900], [-1000, 350], [-1350, -250], [-1450, -700]],
     },
     {
-      id: 3, key: 'ekspres', name: 'PENDARATAN EKSPRES',
-      objective: 'Mendarat di runway pendek Pulau Atol',
-      detail: 'Pendekatan cepat ke landasan pendek Atol. Jaga kecepatan dan laju turun — bahan bakar ketat.',
+      id: 3, key: 'ekspres', name: 'EXPRESS LANDING',
+      objective: 'Land on the short runway at Atol Island',
+      detail: 'Fast approach to the short Atol runway. Watch your speed and descent rate — tight fuel.',
       start: 'karang', target: 'atol', weather: 'dusk',
       fuelStart: 72, timeLimitS: 180, kind: 'land',
     },
     {
-      id: 4, key: 'badai', name: 'BADAI MALAM',
-      objective: 'Mendarat di Mercusuar menembus badai',
-      detail: 'Terbang menembus hujan, petir, dan angin samping menuju suar landasan Pulau Mercusuar.',
+      id: 4, key: 'badai', name: 'NIGHT STORM',
+      objective: 'Land at Mercusuar through the storm',
+      detail: 'Fly through rain, lightning, and crosswind to the Mercusuar runway beacon.',
       start: 'zamrud', target: 'mercusuar', weather: 'night',
       fuelStart: 100, timeLimitS: 270, kind: 'land', storm: true,
     },

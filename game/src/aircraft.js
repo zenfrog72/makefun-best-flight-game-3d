@@ -51,10 +51,12 @@ PK3D.Aircraft = (function () {
     var wing = new THREE.Mesh(new THREE.BoxGeometry(15.5, 0.32, 2.7), white);
     wing.position.set(0, 1.05, -0.6);
     g.add(wing);
+    var tips = [];
     for (var w = -1; w <= 1; w += 2) {
       var tip = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.36, 2.7), red);
       tip.position.set(w * 7.5, 1.05, -0.6);
       g.add(tip);
+      tips.push(tip);
       var strut = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 2.6, 5), grey);
       strut.position.set(w * 3.4, 0.1, -0.4);
       strut.rotation.z = w * 0.5;
@@ -88,7 +90,7 @@ PK3D.Aircraft = (function () {
     }
     var disc = new THREE.Mesh(
       new THREE.CircleGeometry(1.9, 20),
-      new THREE.MeshBasicMaterial({ color: 0xcccccc, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false })
+      new THREE.MeshBasicMaterial({ color: 0xdddddd, transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false })
     );
     prop.add(disc);
     g.add(prop);
@@ -132,7 +134,7 @@ PK3D.Aircraft = (function () {
     g.add(blob);
     // The blob is re-parented to the scene by main.js (it must stay flat on
     // the ground, not bank with the plane); keep a reference here.
-    return { group: g, prop: prop, gear: gear, flapL: flapL, flapR: flapR, navL: navL, navR: navR, navT: navT, blob: blob };
+    return { group: g, prop: prop, gear: gear, flapL: flapL, flapR: flapR, navL: navL, navR: navR, navT: navT, blob: blob, fuselage: fus, nose: nose, wing: wing, tips: tips };
   }
 
   // ---- flight model ---------------------------------------------------------

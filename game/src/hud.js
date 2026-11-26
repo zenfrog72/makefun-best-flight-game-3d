@@ -162,17 +162,17 @@ PK3D.HUD = (function () {
     var tLeft = Math.max(0, info.timeLeft);
     el.timer.textContent = String(Math.floor(tLeft / 60)).padStart(2, '0') + ':' + String(Math.floor(tLeft % 60)).padStart(2, '0');
     el.fuelBar.style.width = state.fuel + '%';
-    el.fuelText.textContent = 'BAHAN BAKAR ' + Math.round(state.fuel) + '%';
+    el.fuelText.textContent = 'FUEL ' + Math.round(state.fuel) + '%';
     el.fuelBar.style.background = state.fuel < 20 ? '#ff5a3c' : '#37c978';
     el.dmgBar.style.width = state.damage + '%';
     el.gear.textContent = state.gear ? 'GEAR DOWN' : 'GEAR UP';
     el.flaps.textContent = state.flaps ? 'FLAPS' : '';
     if (mission) {
-      el.missionName.textContent = 'MISI ' + mission.def.id + ': ' + mission.def.name;
+      el.missionName.textContent = 'MISSION ' + mission.def.id + ': ' + mission.def.name;
       el.missionObj.textContent = mission.def.objective;
       var meta = '';
-      if (mission.def.kind === 'rings') meta = 'CINCIN ' + mission.ringsDone + '/' + mission.def.rings + '  •  ';
-      meta += 'JARAK ' + Math.round(info.distToTarget) + ' m  •  ' + (state.onGround ? 'DI DARAT' : 'TERBANG');
+      if (mission.def.kind === 'rings') meta = 'RING ' + mission.ringsDone + '/' + mission.def.rings + '  •  ';
+      meta += 'DIST ' + Math.round(info.distToTarget) + ' m  •  ' + (state.onGround ? 'ON GROUND' : 'AIRBORNE');
       el.missionMeta.textContent = meta;
     }
     // Compass: centre the current heading (tape window centre at 110 px).
