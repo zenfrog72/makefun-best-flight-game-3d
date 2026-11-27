@@ -4,9 +4,18 @@
 2026-11-26 22:03 WIB); the bar is @satesapi "Solstice Wings" / @reactrailgun "Solstice Wing v2"
 (low-poly 3D, dense HUD, lit cockpit, graded landings).
 
+## SUBMITTED — Fri 2026-11-27 ~01:36 WIB (round 2, before the Fri 07:57 cutoff)
+- **Submission `01a21924-bf27-73bf-b0c6-f4d850aa2fb8`, title "PULAU KURIR 3D", counts from round 2.** Ora approved the exact final screenshots Fri 01:24 WIB ("Ok" — cockpit view still a bit weird, but approved).
+- Repo: https://github.com/zenfrog72/makefun-best-flight-game-3d, commit `a09767372d0f55d7ab4e07ba78564dbe3c071e8f` (public, MIT, About: homepage + `makefun` topic; README has the 3 competition-scoped badges).
+- Bundle `~/workspace/pk3d-bundle.tar.gz`, sha256 `f4bab782c4a68895edb2d102262347e88e5e526c7918b096fc05d5e96aaeb42b` (10,651,939 B): sessions 4638429f (3D build) + 5fdb8ee9 (fixes), parent 48c8001c, usage file `muse-usage-3d.jsonl` (2 rows), system prompt uploaded, prompt file = Ora's verbatim "Ya bikin yang 3d dulu, kalo gak suruh Gemini aja" (handed-off). Usage rows queried fresh from DB in the submit session.
+- Check (fresh bundle, new commit): **15 pass / 0 fail / 7 skip** — thinking_reproduces 81.2% authored (2049/2522, 0 copied), thinking_priced pass (2 usage records).
+- Server status after submit: stage "submitted", round 2, outcome not decided; intake checks all pass (account_wallet, quota, form, entry_signature signed by payout wallet 9Hqxaer…, repo_owner/public, license, repo_created_after_open, commit_in_repo, duplicate_snapshot, committed_secret, repo_readme, repo_about). security_audit: skip ("flagged… graded as submitted"). API record: status "preparing", metrics_withheld, scores [] — rank/score appear after round 2 is judged (cutoff Fri 07:57 WIB). Verify again after the round with `makefun rounds best-flight-game-20261126-0057`.
+- Failed attempts before success (both 422, do NOT count toward quota): (1) unsigned submit → entry_signature (this competition's rewards are escrowed — keypair required, unlike v1's unsigned submit); (2) signed submit → repo_readme (badge URLs needed the competition-scoped form `/badge/<slug>/<owner>/<repo>/rank.svg` — fixed mechanically in README only, new commit a0976737). Screenshots re-verified unchanged after the fix (sha256 == approved set).
+- Quota: this is entry #2 of 3 for the competition; day cap 10/UTC day. Submitting v3 REPLACES v1 as the counted entry (v1 re-pickable via `makefun final`). Claim code: NOT recorded here — it is on the entry's status page (owner view only, `makefun status --submission 01a21924-bf27-73bf-b0c6-f4d850aa2fb8`).
+- Note: a service restart mid-task wiped /tmp (bundle + logs) — bundle was rebuilt fresh from the workspace inputs and stored at ~/workspace/pk3d-bundle.tar.gz so it survives restarts.
+
 ## Current state (fix round, late 2026-11-26 WIB)
-- **BUILD COMPLETE, NOT SUBMITTED.** Awaiting Ora's review of the 4 re-shot screenshots below.
-  Review gate: submit ONLY after Ora approves the EXACT FINAL screenshots.
+- **BUILD COMPLETE, SUBMITTED — see above.** (Was: awaiting Ora's review; approved Fri 01:24 WIB.)
 - Fix round (Ora 23:02 "Betulin dulu" + interior note + "Bahasa juga diganti inggris"):
   shot 1 gear up + ring count, shot 2 rebuilt as a proper in-plane interior,
   shot 4 lightning in frame, ALL in-game text switched to English.
