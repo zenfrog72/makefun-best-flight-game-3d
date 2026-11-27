@@ -4,6 +4,14 @@
 2026-11-26 22:03 WIB); the bar is @satesapi "Solstice Wings" / @reactrailgun "Solstice Wing v2"
 (low-poly 3D, dense HUD, lit cockpit, graded landings).
 
+## RESUBMITTED — Fri 2026-11-27 ~09:40 WIB (round 3)
+- **Submission `01a21ae0-3afa-737f-a0b9-ab2fad244c6e`, title "PULAU KURIR 3D", counts from round 3** (cutoff Fri 19:57 WIB). Same Ora-approved visuals — screenshots verified byte-identical before submit (925c98a1 / d9a9b9da / 2815b646 / a6941c78).
+- **Fix:** the first v3 submit was REJECTED (thinking_reproduces 0.5% authored) because the whole kit dir (44.5 MB CLI, 889,824 lines) was committed into the repo and the server counts every text file in the snapshot. Repair: moved the kit dir out of the repo (`~/workspace/makefun-best-flight-game-3d-kit/`), `git rm`'d it plus `prompt-submit.txt`, `muse-usage-3d.jsonl`, `.makefun/freshness.json`; added `.gitignore` (kit dir + usage files + `.makefun/`); repo now 23 tracked files, 0 strays. New commit `cf2887f93c350bac5e0f99728abdf05e45218e32` (includes the v3-submission STATUS.md record).
+- Bundle `~/workspace/pk3d-bundle-v2.tar.gz`, sha256 `17f7135ca66e…` (10,929,958 B): sessions 4638429f + 5fdb8ee9, parent 48c8001c, usage 2 rows (re-queried fresh), system prompt, prompt handed-off ("Ya bikin yang 3d dulu, kalo gak suruh Gemini aja"). Level-58 kit.
+- Check (fresh bundle, new commit): **14 pass / 0 fail / 6 skip / 5 submission** — thinking_reproduces **99.1% authored (2087/2105, 0 copied)**, unwritten 0.6% (14/2101); thinking_priced pass. main.ts determinism re-verified from /tmp (dossier `508e6913…` byte-identical, same as before).
+- Server status after resubmit: stage **"checked"**, 26 pass / 3 skip, problem None, escrow open, round 3. API: metrics withheld (blind rounds). Claim code: NOT recorded here — in `~/workspace/pk3d-submission-v2.md`.
+- Quota: this was entry #3 of the 3-per-competition cap — no slots remain; if it fails, v1 (`01a2162c`) can be re-picked via `makefun final`.
+
 ## SUBMITTED — Fri 2026-11-27 ~01:36 WIB (round 2, before the Fri 07:57 cutoff)
 - **Submission `01a21924-bf27-73bf-b0c6-f4d850aa2fb8`, title "PULAU KURIR 3D", counts from round 2.** Ora approved the exact final screenshots Fri 01:24 WIB ("Ok" — cockpit view still a bit weird, but approved).
 - Repo: https://github.com/zenfrog72/makefun-best-flight-game-3d, commit `a09767372d0f55d7ab4e07ba78564dbe3c071e8f` (public, MIT, About: homepage + `makefun` topic; README has the 3 competition-scoped badges).
